@@ -86,6 +86,8 @@ The `ofxmv` and `venmv` utilities accept OFX and Venmo CSV files respectively as
 
 The `payees` utility accepts data in ledger journal format as `stdin` and outputs a sorted, deduplicated list of payees, with the sequence " #" and everything after it trimmed. This is designed for constructing your payee/account matching rules. I found that this stripped cheque numbers and location information (for businesses with multiple locations) without losing anything of value. Test it for yourself with your own data: `diff --color -u0 <(ledger payees) <(ledger print | ./payees)`.
 
+The `venmo/rm` utility accepts files as command-line arguments and deletes them if they are exactly 31 lines long (the length of a CSV file downloaded from Venmo containing zero transaction records).
+
 ## Bugs
 
 - `ledger convert`, `ledger-autosync`, *xdg-open*(1) don't play nice with streaming inputs into their `stdin` or reading multiple command-line operands.
