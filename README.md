@@ -57,7 +57,7 @@ The tooling is designed with a particular filesystem layout in mind. Directories
 ```
 
 The `convert` utility wraps
-- `ledger convert` for institutions providing CSV data (Fidelity, Venmo)
+- `ledger convert` for institutions providing CSV data (Fidelity, PayPal, Venmo)
 	- calling an executable in the institution's directory named `csv` taking all `.csv` files in that directory (non-recursively) as command-line arguments to pre-process them.
 	- reading a plain text file in the institution's directory named `date-format` containing an *strftime*(3) format string representing the format of the date field provided in the institution's CSV file data.
 	- setting the account to `assets:$a` where `$a` is the name of the insitution's directory.

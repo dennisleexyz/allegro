@@ -1,0 +1,24 @@
+#!/bin/sh
+exec awk "$(sed 1,2d "$0")" "$@"
+# ex: ft=awk
+
+BEGIN {
+	OFS = ","
+
+	print \
+	"Date",
+	"Time",
+	"TimeZone",
+	"desc",
+	"Type",
+	"Status",
+	"Currency",
+	"Amount",
+	"Receipt ID",
+	"Balance"
+
+	FS = "\",\""
+	OFS = FS
+}
+
+FNR > 1 && $8 { $8 = "$" $8; print }

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for a in fidelity venmo; do
+for a in fidelity pp venmo; do
 	tmp="$(mktemp)"
 	$a/csv $a/*.csv > "$tmp"
 	# echo \
