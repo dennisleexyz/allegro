@@ -1,0 +1,38 @@
+#!/bin/sh
+
+awk -v OFS=',' 'BEGIN {
+	print \
+	"",  
+	"ID",                          # ID
+	"Datetime",                    # Datetime
+	"Type",                        # Type
+	"Status",                      # Status
+	"Note",                        # Note
+	"From",                        # From
+	"To",                          # To
+	"debit",                       # Amount (total)
+	"",                            # Amount (tip)
+	"",                            # Amount (tax)
+	"",                            # Amount (fee)
+	"Tax Rate",                    # Tax Rate
+	"Tax Exempt",                  # Tax Exempt
+	"Funding Source",              # Funding Source
+	"Destination",                 # Destination
+	"Beginning Balance",           # Beginning Balance
+	"Ending Balance",              # Ending Balance
+	"Statement Period Venmo Fees", # Statement Period Venmo Fees
+	"Terminal Location",           # Terminal Location
+	"",                            # Year to Date Venmo Fees
+	"Disclaimer"                   # Disclaimer
+}'
+
+for file in "$@"; do
+	# Skip dirs or empty files
+	{ [ -d "$file" ] || [ ! -s "$file" ]; } && continue
+
+	awk -F, -v OFS=',' 'NR > 4 && NR < '$(($(wc -l < "$file") - 26))' {
+		sub(/T.*/, "", $3)
+		sub("+", "", $9)
+		print
+	}' "$file"
+done

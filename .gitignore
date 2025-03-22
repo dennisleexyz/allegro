@@ -1,0 +1,15 @@
+*.csv
+*.dat
+*.hledger
+*.j
+*.journal
+*.ledger
+*.ofx
+*.OFX
+*.qfx
+*.qif
+*.ssv
+*.timeclock
+*.timedot
+*.tsv
+url

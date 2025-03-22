@@ -1,0 +1,27 @@
+#!/bin/sh
+
+awk -v OFS=',' 'BEGIN {
+	print \
+	"date",                  # Run Date
+	"desc",                  # Action
+	"Symbol",                # Symbol
+	"",                      # Security Description
+	"Security Type",         # Security Type
+	"Quantity",              # Quantity
+	"Price ($)",             # Price ($)
+	"Commission ($)",        # Commission ($)
+	"Fees ($)",              # Fees ($)
+	"Accrued Interest ($)",  # Accrued Interest ($)
+	"debit",                 # Amount ($)
+	""                       # Settlement Date
+}'
+
+for file in "$@"; do
+	# Skip dirs or empty files
+	{ [ -d "$file" ] || [ ! -s "$file" ]; } && continue
+
+	awk -F, -v OFS=, 'NR > 3 && $11 {
+		$11 = "$" $11
+		print
+	}' "$file" | sed '1!G;h;$!d'
+done

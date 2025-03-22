@@ -1,0 +1,24 @@
+#!/bin/sh
+
+for file in "$@"; do
+	# Skip dirs or empty files
+	{ [ -d "$file" ] || [ ! -s "$file" ]; } && continue
+
+	# Extract and format extension
+	ext="${file##*.}"
+	[ "$ext" = "$file" ] && ext="" || ext=".$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
+
+	# Extract and format dates
+	interval=$(awk -F'>' '
+		function fmt(d) { return substr(d, 1, 4) "-" substr(d, 5, 2) "-" substr(d, 7, 2) }
+		/<DTSTART>/ {start=fmt($2)}
+		/<DTEND>/ {end=fmt($2)}
+		END {if (start || end) print start "--" end}
+	' "$file")
+
+	# Skip if no valid dates
+	[ -z "$interval" ] && continue
+
+	# echo \
+	mv -n "$file" "$(dirname "$file")/$interval$ext"
+done

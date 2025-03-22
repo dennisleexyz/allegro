@@ -1,0 +1,20 @@
+#!/bin/sh
+
+for a in fidelity venmo; do
+	tmp="$(mktemp)"
+	$a/csv $a/*.csv > "$tmp"
+	# echo \
+	ledger convert --rich-data --input-date-format "$(cat $a/date-format)" --account assets:$a $tmp
+	rm "$tmp"
+done
+
+for a in bofa/ckg bofa/crc c1 citi; do
+	tmp="$(mktemp)"
+	find $a ! -name "$(printf "*\n*")" -iregex '.*\.[oq]fx' | sort > "$tmp"
+	while IFS= read -r file
+	do
+		# echo \
+		ledger-autosync --unknown-account Expenses:Unknown $([ "$1" ] && echo --rules "$1") -a "$(cat $a/acct)" $([ -e $a/fid ] && echo --fid $(cat $a/fid)) "$file"
+	done < "$tmp" | less -F
+	rm "$tmp"
+done 2>/dev/null

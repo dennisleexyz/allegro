@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for d in "$@"; do
+	[ -d "$d" ] || continue
+	find "$d" -name url -exec cat {} + | xargs "${BROWSER:-xdg-open}"
+done
