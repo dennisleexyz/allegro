@@ -2,5 +2,7 @@
 
 for d in "$@"; do
 	[ -d "$d" ] || continue
-	find "$d" -name url -exec cat {} + | xargs "${BROWSER:-xdg-open}"
+	for url in $(find "$d" -name url -exec cat {} +); do
+		"${BROWSER:-xdg-open}" "$url"
+	done
 done

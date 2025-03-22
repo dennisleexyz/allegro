@@ -88,4 +88,6 @@ The `payees` utility accepts data in ledger journal format as `stdin` and output
 
 ## Bugs
 
-- `ledger convert` and `ledger-autosync` don't play nice with streaming input data into their `stdin` or reading multiple files from command-line arguments. We stream input into a temporary file and then read from that instead (CSV) or iterate (loop) over files and make individual calls to read them separately (OFX), likely hindering performance.
+- `ledger convert`, `ledger-autosync`, *xdg-open*(1) don't play nice with streaming inputs into their `stdin` or reading multiple command-line operands.
+	- For `convert` `*.csv`, we stream input into a temporary file and then make `ledger convert` read from that instead.
+	- For `convert` `*.[oq]fx`/`dl`, we iterate (loop) over operands and make individual calls to `ledger-autosync`/*xdg-open*(1) to handle them separately.
