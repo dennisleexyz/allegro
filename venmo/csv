@@ -26,13 +26,11 @@ awk -v OFS=',' 'BEGIN {
 	"Disclaimer"                   # Disclaimer
 }'
 
-awk="$(command -v nawk || command -v gawk || echo awk)"
-
 for file in "$@"; do
 	# Skip dirs or empty files
 	{ [ -d "$file" ] || [ ! -s "$file" ]; } && continue
 
-	eval "$awk" --csv -v OFS='","' 'NR > 4 && NR < '$(($(wc -l < "$file") - 26))' {
+	awk --csv -v OFS='","' 'NR > 4 && NR < '$(($(wc -l < "$file") - 26))' {
 		if ($9 ~ "-") {
 			$1 = $8 ? $8 : $16
 		} else {
