@@ -2,7 +2,7 @@
 
 awk -v OFS=',' 'BEGIN {
 	print \
-	"",  
+	"desc",
 	"ID",                          # ID
 	"Datetime",                    # Datetime
 	"Type",                        # Type
@@ -26,13 +26,20 @@ awk -v OFS=',' 'BEGIN {
 	"Disclaimer"                   # Disclaimer
 }'
 
+awk="$(command -v nawk || command -v gawk || echo awk)"
+
 for file in "$@"; do
 	# Skip dirs or empty files
 	{ [ -d "$file" ] || [ ! -s "$file" ]; } && continue
 
-	awk -F, -v OFS=',' 'NR > 4 && NR < '$(($(wc -l < "$file") - 26))' {
+	eval "$awk" --csv -v OFS='","' 'NR > 4 && NR < '$(($(wc -l < "$file") - 26))' {
+		if ($9 ~ "-") {
+			$1 = $8 ? $8 : $16
+		} else {
+			$1 = $7 ? $7 : $15
+		}
 		sub(/T.*/, "", $3)
 		sub("+", "", $9)
-		print
+		print "\"" $0 "\""
 	}' "$file"
 done

@@ -12,10 +12,12 @@ Both "allegro" and *ledger* are fuzzy-matched by "legr". The name came to mind p
 
 ## Dependencies
 
-The shell scripts aim to target a POSIX environment, but were developed on GNU/Linux and it is possible that some portability oversights were made.
-
 - [ledger](https://ledger-cli.org/)
 - [ledger-autosync](https://github.com/egh/ledger-autosync/) for OFX formatted data
+
+The scripts for the most part aim to target a POSIX environment. Aside from the following exceptions, any incompatibilites are to be considered bugs resulting from development in a GNU/Linux environment.
+
+- `venmo csv` uses `awk --csv` from One True Awk, Gawk (default on OpenBSD, GNU/Linux).
 
 ## Description
 
