@@ -12,7 +12,7 @@ BEGIN {
 	"desc",
 	"Type",
 	"Status",
-	"Currency",
+	"",
 	"Amount",
 	"Receipt ID",
 	"Balance"
@@ -21,4 +21,19 @@ BEGIN {
 	OFS = FS
 }
 
-FNR > 1 && $8 { $8 = "$" $8; print }
+FNR > 1 && $5 != "General Authorization" && $8 {
+	$4 || $4 = $5
+
+	# https://github.com/egh/ledger-autosync/blob/ffa3fc66050f3c194a7716905103146063d7cad4/ledgerautosync/converter.py#L783
+	currency = $7
+	if (currency == "USD")
+		currency = "$"
+
+	# https://github.com/egh/ledger-autosync/blob/ffa3fc66050f3c194a7716905103146063d7cad4/ledgerautosync/converter.py#L219
+	if (length(currency) == 1)
+		$8 = currency $8
+	else
+		$8 = $8 " " currency
+
+	print
+}
