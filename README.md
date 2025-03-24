@@ -1,12 +1,12 @@
 # Allegro
 
-This is a set of shell scripts for importing data from financial institutions into [ledger][]/[hledger][] [plain text accounting][] systems.
+This is a set of shell scripts for importing data from financial institutions into [ledger][]/[hledger][] [plain text accounting][] systems in a declarative manner.
 
 [ledger]: https://ledger-cli.org/
 [hledger]: https://hledger.org/
 [plain text accounting]: https://plaintextaccounting.org/
 
-## Etymology
+## Name
 
 Both "allegro" and *ledger* are fuzzy-matched by "legr". The name came to mind presumably due to my musical background, and I thought its meaning would be a good fit for the goal I had set out to achieve. It grants alphabet privilege by sorting toward the top of alphabetized lists.
 
@@ -68,11 +68,22 @@ The `convert` utility wraps
 	- reading a plain text file in the institution's directory named `acct` containing an account name.
 	- setting the OFX FID to the contents of, if it exists, a plain text file in the institution's directory named `fid`. This is required by `ledger-autosync` for OFX files not providing FID (like Citi's).
 
-By keeping opening balances in a separate file, you can easily delete and reinitialize your journal without losing data. This may be useful for regenerating it with different payee/account matching rules. If `start.j` contains the starting balances of your accounts in ledger format,
+By keeping opening balances in a separate file, you can easily delete and reinitialize your journal without losing data. This may be useful for regenerating it declaratively with different payee/account matching rules.
 
-```
+```sh
+LEDGER_FILE=ledger.dat
+
+# clear journal
+cat start.j > ledger.dat
+
 # first invocation
-cat start.j <(./convert rules.tsv) > ledger.dat
+./convert rules.tsv >> ledger.dat
+
+# opening balances entry
+ledger equity | tee -a start.j
+# flip signs (`ledger equity` doesn't support the --invert option), make other edits
+${VISUAL:-EDITOR} start.j
+cat start.j <(ledger print) > ledger.dat
 
 # subsequent invocations
 # preview changes
@@ -92,6 +103,7 @@ The `venmo/rm` utility accepts files as command-line arguments and deletes them 
 
 ## Bugs
 
+- A preference has been made to import row data sourced from CSV files in an unmodified state, but in some cases changes are made. If the format changes between invocations, re-imported transactions cannot be deduplicated against existing ones in the journal as the UUID will be different.
 - `ledger convert`, `ledger-autosync`, *xdg-open*(1) don't play nice with streaming inputs into their `stdin` or reading multiple command-line operands.
 	- For `convert` `*.csv`, we stream input into a temporary file and then make `ledger convert` read from that instead.
 	- For `convert` `*.[oq]fx`/`dl`, we iterate (loop) over operands and make individual calls to `ledger-autosync`/*xdg-open*(1) to handle them separately.
