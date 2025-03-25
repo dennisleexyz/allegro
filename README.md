@@ -107,3 +107,10 @@ The `venmo/rm` utility accepts files as command-line arguments and deletes them 
 - `ledger convert`, `ledger-autosync`, *xdg-open*(1) don't play nice with streaming inputs into their `stdin` or reading multiple command-line operands.
 	- For `convert` `*.csv`, we stream input into a temporary file and then make `ledger convert` read from that instead.
 	- For `convert` `*.[oq]fx`/`dl`, we iterate (loop) over operands and make individual calls to `ledger-autosync`/*xdg-open*(1) to handle them separately.
+
+## See also
+
+- [quentinsf/icsv2ledger: Interactive importing of CSV files to Ledger](https://github.com/quentinsf/icsv2ledger)
+- [johannesgerer/buchhaltung: Smart tools for the ledger universe](https://github.com/johannesgerer/buchhaltung)
+- [dpaetzel/aq2ledger: Gettin' your online banking stuff into (H)Ledger.](https://github.com/dpaetzel/aq2ledger)
+- [chrisnatali/ledger-tools: Tools for working with ledger data](https://github.com/chrisnatali/ledger-tools)
