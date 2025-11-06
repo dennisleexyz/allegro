@@ -10,6 +10,18 @@ for f in "$@"; do
 		m["Apr"]="04"; m["May"]="05"; m["Jun"]="06";
 		m["Jul"]="07"; m["Aug"]="08"; m["Sep"]="09";
 		m["Oct"]="10"; m["Nov"]="11"; m["Dec"]="12";
+		m["January"]="01";
+		m["February"]="02";
+		m["March"]="03";
+		m["April"]="04";
+		m["May"]="05";
+		m["June"]="06";
+		m["July"]="07";
+		m["August"]="08";
+		m["September"]="09";
+		m["October"]="10";
+		m["November"]="11";
+		m["December"]="12";
 	}
 	NF == 3 { print $3 "-" m[$2] }
 	NF == 4 { print $4 "-" m[$2] "--" m[$3] }
