@@ -11,10 +11,18 @@ for a in bofa/ckg bofa/crc c1 citi; do
 	rm "$tmp"
 done 2>/dev/null
 
-for a in fidelity pp venmo; do
+for a in fidelity pp pp/mc venmo; do
 	tmp="$(mktemp)"
-	$a/csv $a/*.csv > "$tmp"
+	if [ -s $a/csv ]; then
+		$a/csv $a/*.csv > "$tmp"
+	else
+		cat $a/*.csv > "$tmp"
+	fi
 	# echo \
-	ledger convert --rich-data --input-date-format "$(cat $a/date-format)" --account assets:$a $tmp
+	ledger convert \
+		--rich-data \
+		--input-date-format "$(cat $a/date-format)" \
+		--account "$([ -s $a/acct ] && cat $a/acct || echo assets:$a)" \
+		$tmp
 	rm "$tmp"
 done
