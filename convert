@@ -6,7 +6,12 @@ for a in bofa/ckg bofa/crc c1 citi; do
 	while IFS= read -r file
 	do
 		# echo \
-		ledger-autosync --unknown-account Expenses:Unknown $([ "$1" ] && echo --rules "$1") -a "$(cat $a/acct)" $([ -e $a/fid ] && echo --fid $(cat $a/fid)) "$file"
+		ledger-autosync \
+			--unknown-account Expenses:Unknown \
+			$([ "$1" ] && echo --rules "$1") \
+			-a "$(cat $a/acct)" \
+			$([ -e $a/fid ] && echo --fid $(cat $a/fid)) \
+			"$file"
 	done < "$tmp" | less -F
 	rm "$tmp"
 done 2>/dev/null
