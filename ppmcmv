@@ -1,0 +1,31 @@
+#!/bin/sh
+
+for f in "$@"; do
+	# Skip directories
+	[ -d "$f" ] && continue
+
+	# Reformat date from filename
+	date_str=$(basename "${f%.*}" | awk 'BEGIN {
+		m["January"]="01";
+		m["February"]="02";
+		m["March"]="03";
+		m["April"]="04";
+		m["May"]="05";
+		m["June"]="06";
+		m["July"]="07";
+		m["August"]="08";
+		m["September"]="09";
+		m["October"]="10";
+		m["November"]="11";
+		m["December"]="12";
+	}
+	m[$1] { print $2 "-" m[$1] }
+	')
+
+	# Skip if no valid date
+	[ -z "$date_str" ] && continue
+
+	# echo \
+	mv -n "$f" "$(dirname "$f")/$date_str.csv"
+done
+
