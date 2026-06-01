@@ -1,0 +1,17 @@
+#!/bin/sh
+exec awk --csv "$(sed 1,2d "$0")" "$@"
+# ex: ft=awk
+
+BEGIN {
+	print "Date,Description,debit,Running Bal."
+}
+
+FNR > 8 {
+	$3 = "$" $3
+	for (i = 1; i <= NF; i++) {
+		f = $i
+		gsub(/"/, "\"\"", f)
+		printf "%s\"%s\"", (i==1?"":","), f
+	}
+	printf "\n"
+}

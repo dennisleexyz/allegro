@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo Posted Date,Reference Number,Payee,Address,debit
+awk -F, -v OFS=, 'FNR > 1 {$NF = "$" $NF; print}' "$@"

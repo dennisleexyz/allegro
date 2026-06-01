@@ -1,0 +1,20 @@
+#!/bin/sh
+
+awk -v OFS=',' 'BEGIN {
+	print \
+	"Date",
+	"Transaction",
+	"desc",        # Name
+	"note",        # Memo
+	"Amount"
+}'
+
+for file in "$@"; do
+	# Skip dirs or empty files
+	{ [ -d "$file" ] || [ ! -s "$file" ]; } && continue
+
+	sed 1d "$file" | awk --csv -v OFS='","' '{
+		$5 = "$" $5
+		print "\"" $0 "\""
+	}'
+done

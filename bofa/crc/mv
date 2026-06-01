@@ -1,0 +1,12 @@
+#!/bin/sh
+
+for f in "$@"; do
+	# Skip directories
+	[ -d "$f" ] && continue
+
+	start=$(awk -F, 'END {print $1}' "$f" | date -I -f -)
+	end=$(awk -F, 'NR==2 {print $1}' "$f" | date -I -f -)
+
+	# echo \
+	mv -i "$f" "$(dirname "$f")/$start--$end.csv"
+done

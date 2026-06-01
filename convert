@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for a in bofa/ckg bofa/crc c1 citi; do
+for a in bofa/ckg bofa/crc c1 citi/costco citi/custom fidelity/crc; do
 	tmp="$(mktemp)"
 	find $a ! -name "$(printf "*\n*")" -iregex '.*\.[oq]fx' | sort > "$tmp"
 	while IFS= read -r file
@@ -8,15 +8,14 @@ for a in bofa/ckg bofa/crc c1 citi; do
 		# echo \
 		ledger-autosync \
 			--unknown-account Expenses:Unknown \
-			$([ "$1" ] && echo --rules "$1") \
 			-a "$(cat $a/acct)" \
 			$([ -e $a/fid ] && echo --fid $(cat $a/fid)) \
-			"$file"
+			"$file" 2>/dev/null
 	done < "$tmp" | less -F
 	rm "$tmp"
-done 2>/dev/null
+done
 
-for a in fidelity pp pp/mc venmo; do
+for a in bofa/ckg bofa/crc fidelity fidelity/hsa pp pp/mc venmo; do
 	tmp="$(mktemp)"
 	if [ -s $a/csv ]; then
 		$a/csv $a/*.csv > "$tmp"
@@ -27,7 +26,9 @@ for a in fidelity pp pp/mc venmo; do
 	ledger convert \
 		--rich-data \
 		--input-date-format "$(cat $a/date-format)" \
-		--account "$([ -s $a/acct ] && cat $a/acct || echo assets:$a)" \
+		--account "$(
+			if [ -s $a/acct ]; then cat $a/acct
+			else echo assets:$a | tr / :; fi)" \
 		$tmp
 	rm "$tmp"
 done
