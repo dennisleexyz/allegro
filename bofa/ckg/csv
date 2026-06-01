@@ -1,12 +1,8 @@
 #!/bin/sh
-exec awk --csv "$(sed 1,2d "$0")" "$@"
-# ex: ft=awk
 
-BEGIN {
-	print "Date,Description,debit,Running Bal."
-}
+echo "Date,Description,debit,Running Bal."
 
-FNR > 8 {
+awk 'FNR > 8 {print}' "$@" | sed -E 's/("[^",]+")",/"\1"",/' | awk --csv '{
 	$3 = "$" $3
 	for (i = 1; i <= NF; i++) {
 		f = $i
@@ -15,3 +11,4 @@ FNR > 8 {
 	}
 	printf "\n"
 }
+'
