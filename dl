@@ -1,8 +1,7 @@
 #!/bin/sh
 
-for d in "$@"; do
-	[ -d "$d" ] || continue
-	for url in $(find "$d" -name url -exec cat {} +); do
-		"${BROWSER:-xdg-open}" "$url"
-	done
-done
+find "$@" -name url -exec sh -c '
+	[ -e "$(dirname "$1")"/inactive ] ||
+		# echo \
+		"${BROWSER:-xdg-open}" "$1"
+# ' -- {} \;
