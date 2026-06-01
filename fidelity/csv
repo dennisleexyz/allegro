@@ -20,8 +20,12 @@ for file in "$@"; do
 	# Skip dirs or empty files
 	{ [ -d "$file" ] || [ ! -s "$file" ]; } && continue
 
-	awk -F, -v OFS=, 'NR > 3 && $11 {
+	awk --csv -v OFS='","' '
+	$7 == 1 {
+		next
+	}
+	NR > 3 && $11 {
 		$11 = "$" $11
-		print
+		print "\"" $0 "\""
 	}' "$file" | sed '1!G;h;$!d'
 done
