@@ -12,4 +12,7 @@
 *.timeclock
 *.timedot
 *.tsv
+due
+end
+id
 url
