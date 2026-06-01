@@ -30,7 +30,8 @@ for file in "$@"; do
 	# Skip dirs or empty files
 	{ [ -d "$file" ] || [ ! -s "$file" ]; } && continue
 
-	awk --csv -v OFS='","' 'NR > 4 && NR < '$(($(wc -l < "$file") - 26))' {
+	awk --csv -v OFS='","' '$4 == "Standard Transfer" {next}
+	NR > 4 && NR < '$(($(wc -l < "$file") - 26))' {
 		if ($9 ~ "-") {
 			$1 = $8 ? $8 : $16
 		} else {
